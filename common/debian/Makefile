@@ -30,9 +30,6 @@ PACKAGES = contrail-libs-deb \
 all: ${PACKAGES}
 	@echo "Build complete"
 
-contrail-all: ${PACKAGES}
-	@echo "Build complete"
-
 clean: $(PACKAGES:%-deb=%-clean)
 	@echo "Clean"
 
