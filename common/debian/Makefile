@@ -59,6 +59,34 @@ contrail-install-packages-clean:
 	$(eval BUILDDIR=${SB_TOP}/build/contrail-install-packages)
 	rm -rf ${BUILDDIR}
 
+contrail-fabric-utils-deb:
+	$(eval BUILDDIR=${SB_TOP}/build/third_party/contrail-fabric-utils)
+	cp -R ${SB_TOP}/third_party/fabric-utils ${BUILDDIR}
+	cp -R contrail-fabric-utils/debian ${BUILDDIR}/debian
+	(cd ${BUILDDIR}; fakeroot debian/rules binary)
+
+contrail-fabric-utils-clean:
+	$(eval BUILDDIR=${SB_TOP}/build/third_party/contrail-fabric-utils)
+	rm -rf ${BUILDDIR}
+
+python-keystoneclient-deb:
+	$(eval BUILDDIR=${SB_TOP}/third_party/python-keystoneclient)
+	cp -R python-keystoneclient/debian ${BUILDDIR}/debian
+	(cd ${BUILDDIR}; fakeroot debian/rules binary)
+
+python-keystoneclient-clean:
+	$(eval BUILDDIR=${SB_TOP}/third_party/python-keystoneclient)
+	rm -rf ${BUILDDIR}/debian
+
+euca2ools-deb:
+	$(eval BUILDDIR=${SB_TOP}/third_party/euca2ools)
+	cp -R euca2ools/debian ${BUILDDIR}/debian
+	(cd ${BUILDDIR}; fakeroot debian/rules binary)
+
+euca2ools-clean:
+	$(eval BUILDDIR=${SB_TOP}/third_party/euca2ools)
+	rm -rf ${BUILDDIR}/debian
+
 %-deb:
 	(cd $(@:-deb=); fakeroot debian/rules binary)
 
