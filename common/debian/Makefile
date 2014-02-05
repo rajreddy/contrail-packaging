@@ -25,7 +25,10 @@ PACKAGES = contrail-libs-deb \
 	contrail-openstack-control-deb \
 	contrail-openstack-database-deb \
 	contrail-openstack-vrouter-deb \
-	contrail-openstack-webui-deb
+	contrail-openstack-webui-deb \
+	contrail-fabric-utils-deb \
+	python-keystoneclient-deb \
+	euca2ools-deb
 
 all: ${PACKAGES}
 	@echo "Build complete"
