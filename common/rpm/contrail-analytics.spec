@@ -164,7 +164,6 @@ install -p -m 755 %{_distropkgdir}/contrail-collector.ini %{buildroot}%{_supervi
 install -p -m 755 %{_distropkgdir}/contrail-opserver.ini %{buildroot}%{_supervisordir}/contrail-opserver.ini
 install -p -m 755 %{_distropkgdir}/contrail-qe.ini %{buildroot}%{_supervisordir}/contrail-qe.ini
 install -p -m 755 %{_distropkgdir}/redis-query.ini %{buildroot}%{_supervisordir}/redis-query.ini
-install -p -m 755 %{_distropkgdir}/redis-sentinel.ini %{buildroot}%{_supervisordir}/redis-sentinel.ini
 install -p -m 755 %{_distropkgdir}/redis-uve.ini %{buildroot}%{_supervisordir}/redis-uve.ini
 
 #install .kill files for supervisord
@@ -177,7 +176,6 @@ install -p -m 755 %{_distropkgdir}/contrail-qe.initd.supervisord          %{buil
 install -p -m 755 %{_distropkgdir}/contrail-opserver.initd.supervisord          %{buildroot}%{_initddir}/contrail-opserver
 install -p -m 755 %{_distropkgdir}/redis-query.initd.supervisord          %{buildroot}%{_initddir}/redis-query
 install -p -m 755 %{_distropkgdir}/redis-uve.initd.supervisord          %{buildroot}%{_initddir}/redis-uve
-install -p -m 755 %{_distropkgdir}/redis-sentinel.initd.supervisord %{buildroot}%{_initddir}/redis-sentinel
 #perl -pi -e 's/python2.7/python%{_pyver}/g' %{buildroot}%{_supervisordir}/contrail-opserver.ini
 
 pushd %{_builddir}
@@ -265,7 +263,6 @@ fi
 %{_supervisordir}/contrail-opserver.ini
 %{_supervisordir}/contrail-qe.ini
 %{_supervisordir}/redis-query.ini
-%{_supervisordir}/redis-sentinel.ini
 %{_supervisordir}/redis-uve.ini
 %{_supervisordir}/contrail-analytics.rules
 %if 0%{?rhel}
@@ -276,7 +273,6 @@ fi
 %{_initddir}/contrail-opserver
 %{_initddir}/redis-query
 %{_initddir}/redis-uve
-%{_initddir}/redis-sentinel
 %{_contrailanalytics}/tabledump
 %{_contrailanalytics}/tabledump.py
 %{_contrailanalytics}/tabledump.pyc
