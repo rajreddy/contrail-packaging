@@ -244,10 +244,6 @@ if [ -f /etc/contrail/sentinel.conf ]; then
     IFS=$SAVE_IFS
 fi
 
-# Convert configuration files from old param to new conf file format.
-# %{_contrailetc}/collector.conf.sh
-# %{_contrailetc}/qe.conf.sh
-
 %preun
 %postun
 
