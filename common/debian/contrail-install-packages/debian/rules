@@ -57,7 +57,6 @@ override_dh_auto_install:
 	install -p -m 755 $(SB_TOP)/tools/provisioning/contrail_setup_utils/contrail-keystone-setup.sh $(buildroot)/usr/bin/contrail-keystone-setup.sh
 	# extract contrail_installer 
 	cd $(buildroot)$(_contrailopt); tar xzvf contrail_installer.tgz
-	
 override_dh_shlibdeps:
 
 override_dh_usrlocal:   

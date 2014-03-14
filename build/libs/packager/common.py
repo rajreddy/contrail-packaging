@@ -77,7 +77,6 @@ class BasePackager(Utils):
         self.base_pkgs = self.parse_cfg_file(self.base_pkg_files)
         self.depends_pkgs = self.parse_cfg_file(self.depends_pkg_files)
         self.contrail_pkgs = self.parse_cfg_file(self.contrail_pkg_files, additems)
-
         # update repo dir with store dir prefix and get repo list
         self.update_repodir(self.base_pkgs, self.depends_pkgs,
                                            self.contrail_pkgs)

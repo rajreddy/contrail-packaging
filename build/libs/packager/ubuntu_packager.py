@@ -7,6 +7,7 @@ from common import BasePackager
 
 log = logging.getLogger("pkg.%s" %__name__)
 
+
 class Packager(BasePackager):
     ''' Ubuntu Packager '''
     def ks_build(self):
