@@ -289,6 +289,7 @@ class Utils(object):
         log.debug('Repo dirs from config files:')
         for dirname in repo_dirs:
             log.debug(dirname)
+
         return repo_dirs
 
     def update_repodir(self, *pkgcfgs):
