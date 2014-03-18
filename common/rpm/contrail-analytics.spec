@@ -252,6 +252,7 @@ if [ -f /etc/contrail/sentinel.conf ]; then
     mv /etc/contrail/sentinel.conf.new /etc/contrail/sentinel.conf
     IFS=$SAVE_IFS
 fi
+
 %preun
 %postun
 
