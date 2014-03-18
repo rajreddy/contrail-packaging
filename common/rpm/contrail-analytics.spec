@@ -230,6 +230,7 @@ if [ -f /etc/contrail/vizd_param ]; then
         grep -q 'HOST_IP' /etc/contrail/opserver_param || echo 'HOST_IP='${HOST_IP} >> /etc/contrail/opserver_param
     fi
 fi
+
 if [ -f /etc/contrail/sentinel.conf ]; then
     SENTINEL_MONITOR_LINE=$(grep "sentinel monitor mymaster" /etc/contrail/sentinel.conf)
     SAVE_IFS=$IFS
