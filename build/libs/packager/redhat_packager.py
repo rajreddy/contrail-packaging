@@ -7,7 +7,6 @@ from common import BasePackager
 
 log = logging.getLogger("pkg.%s" %__name__)
 
-
 class Packager(BasePackager):
     ''' Redhat Packager '''
     def ks_build(self):
