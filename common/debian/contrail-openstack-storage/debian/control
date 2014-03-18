@@ -11,4 +11,4 @@ Maintainer: jjeya <jjeya@juniper.net>
 Depends: ceph, ceph-deploy, libvirt-bin, libaio1, libboost-thread1.46.1, python-cinderclient, cinder-volume
 Section: contrail-openstack-storage
 Priority: extra
-Description: Contrail openstack storage package
+Description: Contrail Storage Packages - Container of debian packages
