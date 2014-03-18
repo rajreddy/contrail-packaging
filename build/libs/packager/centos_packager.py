@@ -21,7 +21,6 @@ class Packager(BasePackager):
         self.create_contrail_pkg(*self.meta_pkgs)
         self.verify_built_pkgs_exists(self.meta_pkgs)
         self.copy_built_pkg_files(self.meta_pkgs, extra_dirs=self.store)
-        self.copy_pkg_files(self.base_pkgs)
         self.create_comps_xml()
         ks_file = self.create_ks()
         self.createrepo(extraargs='-g comps.xml')
