@@ -300,7 +300,7 @@ class Utils(object):
         log.debug('Repo dirs from config files:')
         for dirname in repo_dirs:
             log.debug(dirname)
-        return repo_dirs
+        return filter(None, repo_dirs)
 
     def update_repoinfo(self, *pkgcfgs):
         '''Update repo dirs defined for each package with store dir'''

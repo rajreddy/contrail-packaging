@@ -105,12 +105,6 @@ class BasePackager(Utils):
         self.branch = self.exec_cmd_out('cat %s/controller/src/base/version.info' 
                                              %self.git_local_repo)[0]
         
-        # get pkg info
-        additems = {'found_at': {}}
-        self.base_pkgs = self.parse_cfg_file(self.base_pkg_files)
-        self.depends_pkgs = self.parse_cfg_file(self.depends_pkg_files)
-        self.contrail_pkgs = self.parse_cfg_file(self.contrail_pkg_files, additems)
-
         # update repo dir with store dir prefix and get repo list
         self.update_repoinfo(self.base_pkgs, self.depends_pkgs,
                                            self.contrail_pkgs)
