@@ -43,6 +43,7 @@ Requires: contrail-api-venv
 %define _venv_root    /opt/contrail/api-venv
 %define _venvtr       --prefix=%{_venv_root}
 
+
 %define _pyver        %( %{__python} -c "import sys; print '%s.%s' % sys.version_info[0:2]" )
 %define _pysitepkg    /lib/python%{_pyver}/site-packages
 %description
