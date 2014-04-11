@@ -266,11 +266,11 @@ fi
 %config(noreplace) %{_contrailetc}/collector.conf
 %config(noreplace) %{_contrailetc}/query-engine.conf
 %{_venv_root}
-%{_supervisordir}/contrail-collector.ini
-%{_supervisordir}/contrail-opserver.ini
-%{_supervisordir}/contrail-qe.ini
-%{_supervisordir}/redis-query.ini
-%{_supervisordir}/redis-uve.ini
+%config(noreplace) %{_supervisordir}/contrail-collector.ini
+%config(noreplace) %{_supervisordir}/contrail-opserver.ini
+%config(noreplace) %{_supervisordir}/contrail-qe.ini
+%config(noreplace) %{_supervisordir}/redis-query.ini
+%config(noreplace) %{_supervisordir}/redis-uve.ini
 %{_supervisordir}/contrail-analytics.rules
 %if 0%{?rhel}
 %{_initddir}/supervisor-analytics
