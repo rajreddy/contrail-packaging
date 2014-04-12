@@ -17,7 +17,6 @@ import logging.config
 from logger import logger
 logging.setLoggerClass(logger.PackagerLogger)
 from libs.packager.utils import Utils
-from templates import comps_xml
 
 # Import packager based on distribution
 sys.path.append(os.path.abspath(os.path.join('libs', 'packager')))
@@ -79,7 +78,6 @@ class PackagerArgParser(Utils):
             'build_id'              : random.randint(1000, 9999), 
             'sku'                   : skuname,
             'branch'                : None, 
-            'iso_prefix'            : 'contrail',     
             'store_dir'             : os.path.join(git_local_repo, 'packager_store'),
             'absolute_package_dir'  : None,
             'contrail_package_dir'  : None,
@@ -92,7 +90,6 @@ class PackagerArgParser(Utils):
             'logfile'               : logfile,
             'log_config'            : os.path.join(cwd, 'logger', 'logging.cfg'),
             'git_local_repo'        : git_local_repo,
-            'comps_xml_template'    : comps_xml.template,
             'cache_base_dir'        : [cache_base_dir],
         }
   
@@ -227,10 +224,6 @@ class PackagerArgParser(Utils):
                              action='store',
                              help='Line seperated text file containing list of \
                                    make targets')
-        aparser.add_argument('--iso-prefix', '-n',
-                             action='store',
-                             help='Prefix name of the ISO image\
-                                   eg: <isoprefix>-<buildid>-x86_64-DVD.iso')
         aparser.parse_args(self.unparsed_args)
         self.parser = aparser
 
