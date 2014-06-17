@@ -47,8 +47,8 @@ PACKAGES = \
 	libvirt-deb \
 	contrail-openstack-dashboard-deb \
 	contrail-ostack-dashboard-deb \
-	contrail-server-manager \
-	contrail-server-manager-client \
+	contrail-server-manager-deb \
+	contrail-server-manager-client-deb \
 	neutron-plugin-contrail-deb
 
 
