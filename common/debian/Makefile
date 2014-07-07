@@ -45,6 +45,8 @@ PACKAGES = \
 	euca2ools-deb \
 	python-boto-deb \
 	libvirt-deb \
+	contrail-openstack-dashboard-deb \
+	contrail-ostack-dashboard-deb \
 	contrail-server-manager-deb \
 	contrail-server-manager-client-deb \
 	neutron-plugin-contrail-deb
@@ -176,14 +178,14 @@ contrail-openstack-deb:
 contrail-openstack-dashboard-deb:
 	if [ '${CONTRAIL_SKU}' != 'icehouse' ]; then \
 		$(eval BUILDDIR=${SB_TOP}/build/debian/contrail-openstack-dashboard) \
-		mkdir -p ${BUILDDIR}/debian \
-		cp -R ${SB_TOP}/contrail-horizon/* ${BUILDDIR} \
+		mkdir -p ${BUILDDIR}/debian; \
+		cp -R ${SB_TOP}/contrail-horizon/* ${BUILDDIR}; \
 		if [ '${CONTRAIL_SKU}' != 'grizzly' ]; then \
 			(cp -R contrail-openstack-dashboard/debian/havana/* ${BUILDDIR}/debian); \
 		else \
 			(cp -R contrail-openstack-dashboard/debian/grizzly/* ${BUILDDIR}/debian); \
-		fi
-		(cd ${BUILDDIR}; fakeroot debian/rules binary) \
+		fi; \
+		(cd ${BUILDDIR}; fakeroot debian/rules binary); \
 	fi
 
 contrail-openstack-dashboard-clean:
@@ -193,15 +195,15 @@ contrail-openstack-dashboard-clean:
 contrail-ostack-dashboard-deb:
 	if [ '${CONTRAIL_SKU}' != 'icehouse' ]; then \
 		$(eval BUILDDIR=${SB_TOP}/build/debian/contrail-ostack-dashboard) \
-		mkdir -p ${BUILDDIR}/debian \
-		cp -R ${SB_TOP}/distro/openstack/horizon/* ${BUILDDIR} \
-		cp -prf ${SB_TOP}/distro/openstack/horizon/.git ${BUILDDIR} \
+		mkdir -p ${BUILDDIR}/debian; \
+		cp -R ${SB_TOP}/distro/openstack/horizon/* ${BUILDDIR}; \
+		cp -prf ${SB_TOP}/distro/openstack/horizon/.git ${BUILDDIR}; \
 		if [ '${CONTRAIL_SKU}' != 'grizzly' ]; then \
 			(cp -R contrail-ostack-dashboard/debian/havana/* ${BUILDDIR}/debian); \
 		else \
 			(cp -R contrail-ostack-dashboard/debian/grizzly/* ${BUILDDIR}/debian); \
-		fi \
-		(cd ${BUILDDIR}; fakeroot debian/rules binary) \
+		fi; \
+		(cd ${BUILDDIR}; fakeroot debian/rules binary); \
 	fi
 contrail-ostack-dashboard-clean:
 	$(eval BUILDDIR=${SB_TOP}/build/debian/contrail-ostack-dashboard)
