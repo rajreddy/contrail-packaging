@@ -69,6 +69,9 @@ all: ${PACKAGES}
 clean: $(PACKAGES:%-deb=%-clean)
 	@echo "Clean"
 
+list:
+	@echo $(patsubst %-deb,%,$(PACKAGES))
+
 package-%: debian-%
 	$(eval PACKAGE := $(patsubst package-%,%,$@))
 	@echo "Building package $(PACKAGE)"
