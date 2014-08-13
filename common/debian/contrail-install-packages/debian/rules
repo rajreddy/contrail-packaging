@@ -40,6 +40,7 @@ override_dh_auto_install:
 	@echo "making deb for contrail-install-packages"
 	install -d -m 755 $(buildroot)
 	install -d -m 755 $(buildroot)$(_contrailopt)
+	install -d -m 755 $(buildroot)$(_contrailopt)/puppet
 	install -d -m 755 $(buildroot)$(_contrailopt)/contrail_packages
 	# Install files
 	echo BUILDID=`echo $(BUILDTAG) | cut -d '-' -f2 | cut -d '~' -f1` > $(SB_TOP)/tools/packaging/build/VERSION_ubuntu; fi
