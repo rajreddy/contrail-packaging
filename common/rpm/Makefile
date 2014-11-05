@@ -104,10 +104,6 @@ contrail-setup: $(PREP)
 	@echo making rpm for contrail-setup
 	rpmbuild $(RPMBLDOPTS) contrail-setup.spec $(G_TAG)
 
-contrail-setup-with-guest: $(PREP)
-	@echo making rpm for contrail-setup-with-guest
-	rpmbuild $(RPMBLDOPTS) contrail-setup-with-guest.spec $(G_TAG)
-
 # Contrail Cloudstack stuff
 contrail-cloudstack-utils: $(PREP)
 	@echo making rpm for contrail-cloudstack-utils
@@ -202,6 +198,10 @@ contrail-install-packages: $(PREP)
 	@echo making rpm for contrail-install-packages
 	rpmbuild $(RPMBLDOPTS) contrail-install-packages.spec  $(G_TAG)
 
+contrail-thirdparty-packages: $(PREP)
+	@echo making rpm for contrail-thirdparty-packages
+	rpmbuild $(RPMBLDOPTS) contrail-thirdparty-packages.spec  $(G_TAG)
+
 contrail-database: $(PREP) $(LOCAL_PY)
 	@echo making rpm for contrail-database
 	cp contrail-database.spec $(BUILD_BASE)/SPECS/
@@ -215,6 +215,11 @@ contrail-server-manager: $(PREP) $(LOCAL_PY)
 	cp contrail-server-manager.spec $(BUILD_BASE)/SPECS/
 	rpmbuild $(RPMBLDOPTS) $(BUILD_BASE)/SPECS/contrail-server-manager.spec $(G_TAG)
 
+contrail-server-manager-installer: $(PREP) $(LOCAL_PY)
+	@echo making rpm for contrail-server-manager-installer
+	cp contrail-server-manager-installer.spec $(BUILD_BASE)/SPECS/
+	rpmbuild $(RPMBLDOPTS) $(BUILD_BASE)/SPECS/contrail-server-manager-installer.spec $(G_TAG)
+
 contrail-server-manager-client: $(PREP) $(LOCAL_PY)
 	@echo making rom for contrail-server-manager-client
 	cp contrail-server-manager-client.spec $(BUILD_BASE)/SPECS/
@@ -223,6 +228,10 @@ contrail-server-manager-client: $(PREP) $(LOCAL_PY)
 contrail-vrouter-init: $(PREP)
 	@echo making rpm for contrail-vrouter-init
 	rpmbuild $(RPMBLDOPTS) contrail-vrouter-init.spec $(G_TAG)
+
+contrail-server-manager-monitoring: $(PREP)
+	@echo making rpm for contrail-server-manager-monitoring
+	rpmbuild $(RPMBLDOPTS) contrail-server-manager-monitoring.spec $(G_TAG)
 
 ifeq ($(CONTRAIL_SKU), grizzly)
 NEUTRON_PLUGIN = 
@@ -235,13 +244,14 @@ else
 CONTRAIL_HEAT = 
 endif
 
-all: $(PREP) contrail contrail-api-extension \
+all: $(PREP) contrail \
        contrail-interface-name ifmap-python-client \
        contrail-nodemgr contrail-setup contrail-openstack-all \
        contrail-web-core contrail-web-controller contrail-database \
        ${NEUTRON_PLUGIN} contrail-server-manager contrail-server-manager-client \
-       contrail-vrouter-init contrail-web-server-manager ${CONTRAIL_HEAT}
+       contrail-vrouter-init contrail-web-server-manager contrail-server-manager-monitoring ${CONTRAIL_HEAT}
 
+server-manager-all: contrail-server-manager
 clean:
 	@echo clean
 

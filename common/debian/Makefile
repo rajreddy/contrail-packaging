@@ -26,6 +26,7 @@ endif
 
 ifeq ($(CONTRAIL_SKU),icehouse)
     CONTRAIL_OPENSTACK := contrail-openstack-icehouse-deb
+    CONTRAIL_HEAT := contrail-heat-deb
 endif
 
 ifeq ($(CONTRAIL_SKU),havana)
@@ -48,9 +49,9 @@ PACKAGES = \
         contrail-vrouter-init-deb \
 	contrail-web-core-deb \
 	contrail-web-controller-deb \
+	contrail-web-server-manager-deb \
 	contrail-nodemgr-deb \
 	contrail-setup-deb \
-	contrail-provisioning-tools-deb \
 	$(CONTRAIL_OPENSTACK) \
 	contrail-openstack-ha-deb \
 	contrail-openstack-analytics-deb \
@@ -61,14 +62,14 @@ PACKAGES = \
 	contrail-openstack-webui-deb \
 	contrail-fabric-utils-deb \
 	contrail-test-deb \
-	euca2ools-deb \
-	python-boto-deb \
 	libvirt-deb \
 	contrail-openstack-dashboard-deb \
 	contrail-ostack-dashboard-deb \
 	contrail-server-manager-deb \
 	contrail-server-manager-client-deb \
-	neutron-plugin-contrail-deb
+	$(CONTRAIL_HEAT) \
+	neutron-plugin-contrail-deb \
+	contrail-vmware-utils-deb
 
 all: ${PACKAGES}
 	@echo "Build complete"
@@ -95,7 +96,8 @@ clean-%:
 	$(eval PACKAGE := $(patsubst clean-%,%,$@))
 	rm -rf $(SB_TOP)/build/packages/$(PACKAGE)
 
-KERNEL_VERSIONS := 3.8.0-29-generic 3.2.0-58-generic 3.2.0-51-generic 3.11.0-22-generic 3.13.0-24-generic 3.8.0-31-generic 3.13.0-34-generic
+KERNEL_VERSIONS := 3.8.0-29-generic 3.2.0-58-generic 3.2.0-51-generic 3.11.0-22-generic \
+                   3.13.0-24-generic 3.8.0-31-generic 3.13.0-34-generic 3.13.0-35-generic
 package-contrail: debian-contrail
 	$(eval PACKAGE := contrail)
 	@echo "Building package $(PACKAGE)"
@@ -164,31 +166,14 @@ contrail-test-clean:
 	$(eval TGZ_FILE=$(SB_TOP)/build/tools/contrail-test-$(VERSION)~$(CONTRAIL_SKU).tgz)
 	rm -rf ${TGZ_FILE}
 
-euca2ools-deb:
-	$(eval BUILDDIR=${SB_TOP}/third_party/euca2ools)
-	cp -R euca2ools/debian ${BUILDDIR}/debian
-	(cd ${BUILDDIR}; fakeroot debian/rules clean)
-	(cd ${BUILDDIR}; fakeroot debian/rules binary)
-
-euca2ools-clean:
-	$(eval BUILDDIR=${SB_TOP}/third_party/euca2ools)
-	rm -rf ${BUILDDIR}/debian
-
-python-boto-deb:
-	$(eval BUILDDIR=${SB_TOP}/third_party/python-boto)
-	cp -R python-boto/debian ${BUILDDIR}/debian
-	(cd ${BUILDDIR}; fakeroot debian/rules clean)
-	(cd ${BUILDDIR}; fakeroot debian/rules binary)
-
-python-boto-clean:
-	$(eval BUILDDIR=${SB_TOP}/third_party/python-boto)
-	rm -rf ${BUILDDIR}/debian
-
 contrail-openstack-icehouse-deb:
 	$(eval BUILDDIR=${SB_TOP}/build/debian/tmp)
 	rm -rf ${BUILDDIR}
 	mkdir -p ${BUILDDIR}/debian
 	cp -R contrail-openstack/debian ${BUILDDIR}
+	(cd ${BUILDDIR}; [ -f debian/control.icehouse.in ] && python \
+	$(SB_TOP)/tools/packaging/tools/scripts/add_dependency_version.py \
+	  --version $(VERSION) --file debian/control.icehouse.in ) || echo no control.icehouse.in
 	cp ${BUILDDIR}/debian/control.icehouse ${BUILDDIR}/debian/control
 	cp ${BUILDDIR}/debian/rules.icehouse ${BUILDDIR}/debian/rules
 	(cd ${BUILDDIR}; fakeroot debian/rules clean)
@@ -203,6 +188,9 @@ contrail-openstack-juno-deb:
 	rm -rf ${BUILDDIR}
 	mkdir -p ${BUILDDIR}/debian
 	cp -R contrail-openstack/debian ${BUILDDIR}
+	(cd ${BUILDDIR}; [ -f debian/control.juno.in ] && python \
+	$(SB_TOP)/tools/packaging/tools/scripts/add_dependency_version.py \
+	  --version $(VERSION) --file debian/control.juno.in ) || echo no control.juno.in
 	cp ${BUILDDIR}/debian/control.juno ${BUILDDIR}/debian/control
 	cp ${BUILDDIR}/debian/rules.juno ${BUILDDIR}/debian/rules
 	(cd ${BUILDDIR}; fakeroot debian/rules clean)
@@ -213,13 +201,11 @@ contrail-openstack-juno-clean:
 	rm -rf ${BUILDDIR}
 
 contrail-openstack-dashboard-deb:
-	if [ '${CONTRAIL_SKU}' = 'havana' ]; then \
-		$(eval BUILDDIR=${SB_TOP}/build/debian/contrail-openstack-dashboard) \
-		mkdir -p ${BUILDDIR}/debian; \
-		cp -R ${SB_TOP}/contrail-horizon/* ${BUILDDIR}; \
-		(cp -R contrail-openstack-dashboard/debian/havana/* ${BUILDDIR}/debian); \
-		(cd ${BUILDDIR}; fakeroot debian/rules binary); \
-	fi
+	$(eval BUILDDIR=${SB_TOP}/build/debian/contrail-openstack-dashboard) \
+	mkdir -p ${BUILDDIR}/debian;
+	cp -R ${SB_TOP}/contrail-horizon/* ${BUILDDIR};
+	(cp -R contrail-openstack-dashboard/debian/${CONTRAIL_SKU}/* ${BUILDDIR}/debian);
+	(cd ${BUILDDIR}; fakeroot debian/rules binary);
 
 contrail-openstack-dashboard-clean:
 	$(eval BUILDDIR=${SB_TOP}/build/debian/contrail-openstack-dashboard)
@@ -291,6 +277,19 @@ neutron-plugin-contrail-clean:
 		$(eval BUILDDIR=${SB_TOP}/build/debian/neutron-plugin-contrail) \
 		rm -rf ${BUILDDIR}; \
 	fi
+
+contrail-heat-deb:
+	$(eval BUILDDIR=${SB_TOP}/build/debian/contrail-heat) \
+	mkdir -p ${BUILDDIR}; \
+	cp -R ${SB_TOP}/openstack/contrail-heat/* ${BUILDDIR}; \
+	cp -R ${SB_TOP}/tools/packages/debian/contrail-heat/debian ${BUILDDIR}/debian; \
+	sed -i 's/VERSION/$(VERSION)/g' ${BUILDDIR}/debian/changelog; \
+	(cd ${BUILDDIR}; fakeroot debian/rules clean); \
+	(cd ${BUILDDIR}; fakeroot debian/rules binary);
+
+contrail-heat-clean:
+	$(eval BUILDDIR=${SB_TOP}/build/debian/contrail-heat) \
+	rm -rf ${BUILDDIR};
 
 contrail-vrouter-deb: contrail-libs-deb
 	$(eval BUILDDIR=${SB_TOP}/build/debian/contrail-vrouter)

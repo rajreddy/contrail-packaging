@@ -32,7 +32,7 @@ class BasePackager(Utils):
         self.contrail_pkg_files    = self.expanduser(kwargs['contrail_package_file'])
         self.id                    = kwargs.get('build_id', 999)
         self.sku                   = kwargs.get('sku', 'grizzly')
-        self.branch                = kwargs.get('branch', None)
+        self.branch                = kwargs.get('branch', 9.9)
         self.store                 = self.expanduser(kwargs['store_dir'])
         self.abs_pkg_dirs          = self.expanduser(kwargs['absolute_package_dir'])
         self.cache_base_dir        = self.expanduser(kwargs['cache_base_dir'])
@@ -43,9 +43,8 @@ class BasePackager(Utils):
         self.make_targets_file     = self.expanduser(kwargs.get('make_targets_file', None))
         pkg_types                  = {'ubuntu': 'deb', 'centos': 'rpm', \
                                       'redhatenterpriselinuxserver': 'rpm', 'fedora': 'rpm'}
-        self.platform              = platform.dist()[0].lower()
-        self.platform              = PLATFORM[0]
-        self.cache_subdir          = "".join(PLATFORM[:2]).lower().replace('.', '')
+        self.platform              = PLATFORM['default'][0]
+        self.cache_subdir          = PLATFORM['formatted']
         self.pkg_type              = pkg_types[self.platform]
         self.store_log_dir         = os.path.join(self.store, 'package_info')
         self.artifacts_dir         = os.path.join(self.git_local_repo, 'build', 'artifacts')
@@ -123,11 +122,6 @@ class BasePackager(Utils):
             copying package files..etc
         '''
         
-        # update branch and build tag and tgz name
-        # Temporarily override user input for branch
-        self.branch = self.exec_cmd_out('cat %s/controller/src/base/version.info' 
-                                             %self.git_local_repo)[0]
-        
         # update repo dir with store dir prefix and get repo list
         self.update_repoinfo(self.base_pkgs, self.depends_pkgs,
                                            self.contrail_pkgs)
@@ -190,31 +184,6 @@ class BasePackager(Utils):
                    target == self.meta_pkg:
                     continue
                 self.contrail_pkgs[target]['builtloc'] = self.contrail_pkg_dirs
-
-            # pick up or create contrail_installer.tgz 
-            if not ('contrail-setup' in [tgt.strip('-deb') for tgt in self.targets] or
-                    'contrail-default-target' in self.targets):
-                if self.platform == 'ubuntu':
-                    builddir = os.path.join(self.git_local_repo, 'build', 'debian')
-                else:
-                    builddir = os.path.join(self.git_local_repo, 'controller', 'build')
-                self.create_dir(builddir)
-                files = self.get_file_list(self.contrail_pkg_dirs, 'contrail_installer.tgz')
-                installer_tgz = self.get_latest_file(files)
-                if installer_tgz:
-                    if os.path.dirname(installer_tgz) == builddir:
-                        log.debug('Installer TGZ (%s) is already present '
-                                  ' in build dir (%s)' % (
-                                  installer_tgz, builddir))
-                    else:
-                        log.info('Copying %s to %s' %(installer_tgz, builddir))
-                        shutil.copy(installer_tgz, builddir)
-                else:
-                    installer_script = os.path.join(self.git_local_repo, 'tools',
-                                                     'provisioning', 'create_installer.py')
-                    log.info('Creating contrail_installer.tgz...')
-                    self.exec_cmd(installer_script, wd=builddir)
-                    
         else:
             self.targets = self.targets or self.default_targets
                     
