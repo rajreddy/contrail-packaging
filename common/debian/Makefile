@@ -47,6 +47,7 @@ PACKAGES = \
         ifmap-python-client \
         contrail-nova-vif-deb \
         contrail-vrouter-init-deb \
+        contrail-vrouter-common-deb \
 	contrail-web-core-deb \
 	contrail-web-controller-deb \
 	contrail-web-server-manager-deb \
@@ -67,6 +68,7 @@ PACKAGES = \
 	contrail-ostack-dashboard-deb \
 	contrail-server-manager-deb \
 	contrail-server-manager-client-deb \
+	contrail-server-manager-monitoring-deb \
 	$(CONTRAIL_HEAT) \
 	neutron-plugin-contrail-deb \
 	contrail-vmware-utils-deb

@@ -92,15 +92,14 @@ SOURCE0 : %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 #BuildRequires:
-Requires: puppetlabs-release
 Requires: python >= 2.6.6
 Requires: httpd
 Requires: sqlite
 Requires: cobbler
 Requires: cobbler-web
 Requires:fence-agents
-Requires: puppet
-Requires: puppet-server
+Requires: puppet = 2.7.25
+Requires: puppet-server = 2.7.25
 Requires: python-devel
 Requires: python-pip
 Requires: dhcp
@@ -115,6 +114,7 @@ Requires: sendmail
 Requires: dpkg
 Requires: dpkg-devel
 Requires: syslinux
+Requires: python-gevent
 
 %description
 A Server manager description
@@ -178,11 +178,19 @@ service puppet start
 service postfix stop
 service sendmail restart
 
-sed -i "s/10.84.51.11/$HOST_IP/" /etc/cobbler/settings
+# Set IP address in cobbler settings file
+sed -i "s/__\$IPADDRESS__/$HOST_IP/" /etc/cobbler/settings
 /sbin/chkconfig --add contrail-server-manager
 sed -i "s/module = authn_.*/module = authn_configfile/g" /etc/cobbler/modules.conf
-sed -i "s/127.0.0.1/$HOST_IP/g" /opt/contrail/server_manager/sm-config.ini
 
+# Set IP address in server manager configuration file.
+sed -i "s/__\$IPADDRESS__/$HOST_IP/g" /opt/contrail/server_manager/sm-config.ini
+
+# Set IP Address in smgr_dhcp_event.py DHCP hook.
+sed -i "s/__\$IPADDRESS__/$HOST_IP/g" /opt/contrail/server_manager/smgr_dhcp_event.py
+
+cd /var/www/html/thirdparty_packages
+dpkg-scanpackages . | gzip -9c > Packages.gz
 
 chkconfig httpd on
 chkconfig puppetmaster on
@@ -224,6 +232,7 @@ cp %{_contrail_smgr_src}smgr_dhcp_event.py %{buildroot}%{_contrailopt}%{_contrai
 cp %{_contrail_smgr_src}server_mgr_defaults.py %{buildroot}%{_contrailopt}%{_contrail_smgr}
 cp %{_contrail_smgr_src}server_mgr_err.py %{buildroot}%{_contrailopt}%{_contrail_smgr}
 cp %{_contrail_smgr_src}contrail_defaults.py %{buildroot}%{_contrailopt}%{_contrail_smgr}
+cp %{_contrail_smgr_src}server_mgr_mon_base_plugin.py %{buildroot}%{_contrailopt}%{_contrail_smgr}
 
 cp %{_contrail_smgr_src}utils/send_mail.py %{buildroot}%{_contrailopt}%{_contrail_smgr}
 cp %{_contrail_smgr_src}sm-config.ini %{buildroot}%{_contrailopt}%{_contrail_smgr}
